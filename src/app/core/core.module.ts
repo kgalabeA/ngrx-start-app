@@ -1,3 +1,4 @@
+import { Store } from '@ngrx/store';
 import { ApiService } from './services/api.service';
 import { UserService } from './services/user.service';
 import { NgModule } from '@angular/core';
@@ -14,7 +15,8 @@ import { HttpClientModule } from '@angular/common/http';
   ],
   providers: [
     UserService,
-    ApiService
+    ApiService,
+    Store
   ]
 })
 export class CoreModule { }

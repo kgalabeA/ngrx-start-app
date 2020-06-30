@@ -1,3 +1,6 @@
+import { UserEffects } from './../core/store/effects/user.effect';
+import { StoreModule } from '@ngrx/store';
+import { CoreModule } from './../core/core.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -10,9 +13,8 @@ import { AddUserComponent } from './user/add-user/add-user.component';
 import { SingleUserComponent } from './user/single-user/single-user.component';
 import { UserListComponent } from './user/user-list/user-list.component';
 import { UserTableComponent } from './user/user-table/user-table.component';
-import { MatSliderModule } from '@angular/material/slider';
-import {MatListModule} from '@angular/material/list';
-import {MatSortModule} from '@angular/material/sort';
+import { fromGeo, fromUser } from '../core';
+import { EffectsModule } from '@ngrx/effects';
 
 
 @NgModule({
@@ -20,8 +22,10 @@ import {MatSortModule} from '@angular/material/sort';
   imports: [
     CommonModule,
     ViewRoutingModule,
-    MatListModule,
-    MatSortModule
+    CoreModule,
+    StoreModule.forFeature('geo',fromGeo.geoReducer),
+    StoreModule.forFeature('user',fromUser),
+    EffectsModule.forFeature([UserEffects])
   ]
 })
 export class ViewModule { }
