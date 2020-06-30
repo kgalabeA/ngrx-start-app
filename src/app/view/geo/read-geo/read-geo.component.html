@@ -1,0 +1,10 @@
+<div class="right" *ngIf="geos">
+
+  <h3>Tutorials</h3>
+  <ul>
+    <li *ngFor="let g of geos |async">
+      <p>{{g.lat}}-{{g.lng}}</p>
+    </li>
+  </ul>
+
+</div>
