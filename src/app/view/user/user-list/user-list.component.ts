@@ -1,3 +1,6 @@
+import { Observable } from 'rxjs';
+import { UserListLoad } from './../../../core/store/actions/user.action';
+import { Store, select } from '@ngrx/store';
 import { AddGeoComponent } from './../../geo/add-geo/add-geo.component';
 import { UserService } from './../../../core/services/user.service';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
@@ -6,6 +9,8 @@ import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
 import { UserListDataSource } from './user-list-datasource';
 import {MatDialog} from '@angular/material/dialog';
+import { AppState } from 'src/app/store';
+import { selectUserList } from 'src/app/core/store/selectors/user.selector';
 
 
 
@@ -22,9 +27,10 @@ export class UserListComponent implements AfterViewInit, OnInit {
   @ViewChild(MatTable) table: MatTable<any>;
   dataSource: UserListDataSource;
 
+  users:Observable<any>;
 
-constructor(private userS:UserService,public dialog: MatDialog){
-
+constructor(private userS:UserService,public dialog: MatDialog,private store:Store<AppState>){
+this.store.dispatch(new UserListLoad())
 }
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
@@ -32,10 +38,12 @@ constructor(private userS:UserService,public dialog: MatDialog){
 
   ngOnInit() {
 
+    this.users=this.store.pipe(select(selectUserList));
+
     this.dataSource = new UserListDataSource();
 
     this.userS.getUsers().subscribe(res=>{
-      console.log(res);
+      //console.log(res);
       this.dataSource.setList(res);
     })
 
@@ -45,6 +53,12 @@ constructor(private userS:UserService,public dialog: MatDialog){
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.table.dataSource = this.dataSource;
+
+    this.users.subscribe(list=>{
+      if(list){
+        console.log(list)
+      }
+    })
   }
 
   handleDelete(id:number){
@@ -59,4 +73,8 @@ this.openDialog()
       console.log(`Dialog result: ${result}`);
     });
   }
+
+  goToLink(url: string){
+    window.open('https://'+url, "_blank");
+}
 }
